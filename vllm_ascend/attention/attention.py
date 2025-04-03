@@ -691,9 +691,14 @@ class AscendAttentionBackendImpl(AttentionImpl):
         value = value.contiguous()
         attn_type = self.attn_type
 
-        output = torch.empty(num_tokens,
-                             self.num_heads,
-                             self.head_size,
+        # Note: torch.randn is used here instead of torch.empty because
+        # torch.empty will produce NaN value in the preemptive scheduling.
+        # output = torch.empty(num_tokens,
+        #                      self.num_heads,
+        #                      self.head_size,
+        #                      dtype=query.dtype,
+        #                      device=query.device)
+        output = torch.randn([num_tokens, self.num_heads, self.head_size],
                              dtype=query.dtype,
                              device=query.device)
 
