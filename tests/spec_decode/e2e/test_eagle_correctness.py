@@ -136,44 +136,45 @@ def test_eagle_e2e_greedy_logprobs(vllm_runner, common_llm_kwargs,
                                   disable_logprobs=test_llm_kwargs[
                                       'disable_logprobs_during_spec_decoding'])
 
+# TODO: Open it when vllm-ascend support graph mode and 
+# support enforce_eager status is False to run model in graph mode
+# @pytest.mark.parametrize(
+#     "common_llm_kwargs",
+#     [{
+#         "enforce_eager": False,
 
-@pytest.mark.parametrize(
-    "common_llm_kwargs",
-    [{
-        "enforce_eager": False,
+#         # Print spec metrics.
+#         "disable_log_stats": False,
 
-        # Print spec metrics.
-        "disable_log_stats": False,
+#         # Precision
+#         "dtype": PRECISION,
 
-        # Precision
-        "dtype": PRECISION,
-
-        # Main model
-        "model_name": MAIN_MODEL,
-    }])
-@pytest.mark.parametrize("per_test_common_llm_kwargs", [{}])
-@pytest.mark.parametrize("baseline_llm_kwargs", [{}])
-@pytest.mark.parametrize("test_llm_kwargs", [
-    {
-        "speculative_model": SPEC_MODEL,
-        "num_speculative_tokens": MAX_SPEC_TOKENS,
-    },
-])
-@pytest.mark.parametrize("output_len", [
-    128,
-])
-@pytest.mark.parametrize("batch_size", [1, 32])
-@pytest.mark.parametrize("seed", [1])
-def test_eagle_e2e_greedy_correctness_cuda_graph(
-        vllm_runner, common_llm_kwargs, per_test_common_llm_kwargs,
-        baseline_llm_kwargs, test_llm_kwargs, batch_size: int, output_len: int,
-        seed: int):
-    """Verify greedy equality with cuda graph enabled and different
-    batch sizes."""
-    run_equality_correctness_test(vllm_runner, common_llm_kwargs,
-                                  per_test_common_llm_kwargs,
-                                  baseline_llm_kwargs, test_llm_kwargs,
-                                  batch_size, output_len, seed)
+#         # Main model
+#         "model_name": MAIN_MODEL,
+#     }])
+# @pytest.mark.parametrize("per_test_common_llm_kwargs", [{}])
+# @pytest.mark.parametrize("baseline_llm_kwargs", [{}])
+# @pytest.mark.parametrize("test_llm_kwargs", [
+#     {
+#         "speculative_model": SPEC_MODEL,
+#         "num_speculative_tokens": MAX_SPEC_TOKENS,
+#     },
+# ])
+# @pytest.mark.parametrize("output_len", [
+#     128,
+# ])
+# @pytest.mark.parametrize("batch_size", [1, 32])
+# @pytest.mark.parametrize("seed", [1])
+# def test_eagle_e2e_greedy_correctness_cuda_graph(
+#         vllm_runner, common_llm_kwargs, per_test_common_llm_kwargs,
+#         baseline_llm_kwargs, test_llm_kwargs, batch_size: int, output_len: int,
+#         seed: int):
+#     """Verify greedy equality with cuda graph enabled and different
+#     batch sizes."""
+#     run_equality_correctness_test(vllm_runner, common_llm_kwargs,
+#                                   per_test_common_llm_kwargs,
+#                                   baseline_llm_kwargs, test_llm_kwargs,
+#                                   batch_size, output_len, seed)
 
 # TODO: There is a problem with the preemptive scheduling in the current
 # version, which makes this case fail. Please release this case after the
